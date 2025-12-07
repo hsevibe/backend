@@ -78,6 +78,120 @@ defmodule Ice.Schemas do
     })
   end
 
+  defmodule Profile do
+    require OpenApiSpex
+
+    OpenApiSpex.schema(%{
+      title: "Profile",
+      description: "A profile",
+      type: :object,
+      properties: %{
+        id: %Schema{type: :string, description: "Profile ID"},
+        created_at: %Schema{type: :string, format: :"date-time", description: "Created at"},
+        user_id: %Schema{type: :string, description: "User ID"},
+        name: %Schema{type: :string, description: "Name"},
+        age: %Schema{type: :integer, description: "Age"},
+        gender: %Schema{
+          type: :string,
+          enum: ["male", "female", "other", "prefer_not"],
+          description: "Gender"
+        },
+        about: %Schema{type: :string, description: "About (bio)"},
+        avatar_url: %Schema{type: :string, description: "Avatar URL"},
+        city: %Schema{type: :string, description: "City"},
+        home_lat: %Schema{type: :number, format: :float, description: "Home latitude"},
+        home_lng: %Schema{type: :number, format: :float, description: "Home longitude"},
+        search_radius_km: %Schema{type: :integer, description: "Search radius in km"},
+        preferred_partner_gender: %Schema{
+          type: :string,
+          enum: ["male", "female", "other", "prefer_not"],
+          description: "Preferred partner gender"
+        },
+        preferred_age_min: %Schema{type: :integer, description: "Preferred age min"},
+        preferred_age_max: %Schema{type: :integer, description: "Preferred age max"}
+      },
+      required: [:id, :created_at, :user_id]
+    })
+  end
+
+  defmodule ProfileList do
+    require OpenApiSpex
+
+    OpenApiSpex.schema(%{
+      title: "ProfileList",
+      description: "List of profiles",
+      type: :array,
+      items: Profile
+    })
+  end
+
+  defmodule CreateProfileRequest do
+    require OpenApiSpex
+
+    OpenApiSpex.schema(%{
+      title: "CreateProfileRequest",
+      description: "Request to create a profile",
+      type: :object,
+      properties: %{
+        user_id: %Schema{type: :string, description: "User ID"},
+        name: %Schema{type: :string, description: "Name"},
+        age: %Schema{type: :integer, description: "Age"},
+        gender: %Schema{
+          type: :string,
+          enum: ["male", "female", "other", "prefer_not"],
+          description: "Gender"
+        },
+        about: %Schema{type: :string, description: "About (bio)"},
+        avatar_url: %Schema{type: :string, description: "Avatar URL"},
+        city: %Schema{type: :string, description: "City"},
+        home_lat: %Schema{type: :number, format: :float, description: "Home latitude"},
+        home_lng: %Schema{type: :number, format: :float, description: "Home longitude"},
+        search_radius_km: %Schema{type: :integer, description: "Search radius in km"},
+        preferred_partner_gender: %Schema{
+          type: :string,
+          enum: ["male", "female", "other", "prefer_not"],
+          description: "Preferred partner gender"
+        },
+        preferred_age_min: %Schema{type: :integer, description: "Preferred age min"},
+        preferred_age_max: %Schema{type: :integer, description: "Preferred age max"}
+      },
+      required: [:user_id]
+    })
+  end
+
+  defmodule UpdateProfileRequest do
+    require OpenApiSpex
+
+    OpenApiSpex.schema(%{
+      title: "UpdateProfileRequest",
+      description: "Request to update a profile",
+      type: :object,
+      properties: %{
+        user_id: %Schema{type: :string, description: "User ID"},
+        name: %Schema{type: :string, description: "Name"},
+        age: %Schema{type: :integer, description: "Age"},
+        gender: %Schema{
+          type: :string,
+          enum: ["male", "female", "other", "prefer_not"],
+          description: "Gender"
+        },
+        about: %Schema{type: :string, description: "About (bio)"},
+        avatar_url: %Schema{type: :string, description: "Avatar URL"},
+        city: %Schema{type: :string, description: "City"},
+        home_lat: %Schema{type: :number, format: :float, description: "Home latitude"},
+        home_lng: %Schema{type: :number, format: :float, description: "Home longitude"},
+        search_radius_km: %Schema{type: :integer, description: "Search radius in km"},
+        preferred_partner_gender: %Schema{
+          type: :string,
+          enum: ["male", "female", "other", "prefer_not"],
+          description: "Preferred partner gender"
+        },
+        preferred_age_min: %Schema{type: :integer, description: "Preferred age min"},
+        preferred_age_max: %Schema{type: :integer, description: "Preferred age max"}
+      }
+    })
+  end
+
   defmodule ErrorResponse do
     require OpenApiSpex
 

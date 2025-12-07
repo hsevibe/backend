@@ -14,6 +14,7 @@ defmodule Ice.Router do
   plug(:dispatch)
 
   forward("/users", to: Repo.User.Router)
+  forward("/profiles", to: Repo.Profile.Router)
 
   get "/ping" do
     send_resp(conn, 200, "pong")

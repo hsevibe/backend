@@ -4,9 +4,11 @@ defmodule Repo.Domain do
 
   resources do
     resource Repo.User
+    resource Repo.Profile
   end
 
   @user Repo.User
+  @profile Repo.Profile
 
   def list_users do
     case Ash.read(@user) do
@@ -69,6 +71,78 @@ defmodule Repo.Domain do
 
       {:error, _} ->
         {:error, :internal_error}
+    end
+  end
+
+  def list_profiles do
+    case Ash.read(@profile) do
+      {:ok, profiles} -> {:ok, profiles}
+      {:error, _} -> {:error, :internal_error}
+    end
+  end
+
+  def get_profile(profile_id) do
+    case @profile |> Ash.Query.filter(id: profile_id) |> Ash.read() do
+      {:ok, [profile]} -> {:ok, profile}
+      {:ok, []} -> {:error, :profile_not_found}
+      {:error, _} -> {:error, :internal_error}
+    end
+  end
+
+  def get_profile_by_user_id(user_id) do
+    case @profile |> Ash.Query.filter(user_id: user_id) |> Ash.read() do
+      {:ok, [profile]} -> {:ok, profile}
+      {:ok, []} -> {:error, :profile_not_found}
+      {:error, _} -> {:error, :internal_error}
+    end
+  end
+
+  def create_profile(attrs) do
+    case @profile |> Ash.Changeset.for_create(:create, attrs) |> Ash.create() do
+      {:ok, profile} ->
+        {:ok, profile}
+
+      {:error, %Ash.Error.Invalid{}} ->
+        {:error, :validation_error}
+
+      {:error, _} ->
+        {:error, :internal_error}
+    end
+  end
+
+  def update_profile(profile_id, attrs) do
+    case @profile |> Ash.get(profile_id) do
+      {:ok, profile} ->
+        case profile |> Ash.Changeset.for_update(:update, attrs) |> Ash.update() do
+          {:ok, profile} -> {:ok, profile}
+          {:error, %Ash.Error.Invalid{}} -> {:error, :validation_error}
+          {:error, _} -> {:error, :internal_error}
+        end
+
+      {:error, %Ash.Error.Query.NotFound{}} ->
+        {:error, :profile_not_found}
+
+      {:error, _} ->
+        {:error, :internal_error}
+    end
+  end
+
+  def delete_profile(profile_id) do
+    case @profile |> Ash.get(profile_id) do
+      {:ok, nil} ->
+        {:error, :profile_not_found}
+
+      {:ok, profile} ->
+        case profile |> Ash.destroy() do
+          :ok ->
+            :ok
+
+          {:error, %Ash.Error.Query.NotFound{}} ->
+            {:error, :profile_not_found}
+        end
+
+      {:error, _} ->
+        {:error, :profile_not_found}
     end
   end
 end
