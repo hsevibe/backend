@@ -25,7 +25,9 @@ defmodule Repo.Profile do
       :search_radius_km,
       :preferred_partner_gender,
       :preferred_age_min,
-      :preferred_age_max
+      :preferred_age_max,
+      :sport,
+      :badge
     ]
   end
 
@@ -95,6 +97,16 @@ defmodule Repo.Profile do
     end
 
     attribute :preferred_age_max, :integer do
+      allow_nil? true
+      public? true
+    end
+
+    attribute :sport, :string do
+      allow_nil? true
+      public? true
+    end
+
+    attribute :badge, :string do
       allow_nil? true
       public? true
     end

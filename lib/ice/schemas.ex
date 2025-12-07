@@ -108,7 +108,9 @@ defmodule Ice.Schemas do
           description: "Preferred partner gender"
         },
         preferred_age_min: %Schema{type: :integer, description: "Preferred age min"},
-        preferred_age_max: %Schema{type: :integer, description: "Preferred age max"}
+        preferred_age_max: %Schema{type: :integer, description: "Preferred age max"},
+        sport: %Schema{type: :string, description: "Sport"},
+        badge: %Schema{type: :string, description: "Badge"}
       },
       required: [:id, :created_at, :user_id]
     })
@@ -153,7 +155,9 @@ defmodule Ice.Schemas do
           description: "Preferred partner gender"
         },
         preferred_age_min: %Schema{type: :integer, description: "Preferred age min"},
-        preferred_age_max: %Schema{type: :integer, description: "Preferred age max"}
+        preferred_age_max: %Schema{type: :integer, description: "Preferred age max"},
+        sport: %Schema{type: :string, description: "Sport"},
+        badge: %Schema{type: :string, description: "Badge"}
       },
       required: [:user_id]
     })
@@ -187,7 +191,9 @@ defmodule Ice.Schemas do
           description: "Preferred partner gender"
         },
         preferred_age_min: %Schema{type: :integer, description: "Preferred age min"},
-        preferred_age_max: %Schema{type: :integer, description: "Preferred age max"}
+        preferred_age_max: %Schema{type: :integer, description: "Preferred age max"},
+        sport: %Schema{type: :string, description: "Sport"},
+        badge: %Schema{type: :string, description: "Badge"}
       }
     })
   end
