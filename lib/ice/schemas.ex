@@ -10,18 +10,16 @@ defmodule Ice.Schemas do
       type: :object,
       properties: %{
         id: %Schema{type: :string, description: "User ID"},
-        first_name: %Schema{type: :string, description: "First name"},
-        last_name: %Schema{type: :string, description: "Last name"},
-        email: %Schema{type: :string, description: "Email"},
-        telegram: %Schema{type: :string, description: "Telegram"},
-        role: %Schema{
+        created_at: %Schema{type: :string, format: :"date-time", description: "Created at"},
+        login: %Schema{type: :string, description: "Login (phone or email)"},
+        last_active_at: %Schema{
           type: :string,
-          enum: ["mentor", "normie"],
-          description: "User role"
+          format: :"date-time",
+          description: "Last active at"
         },
-        pfp: %Schema{type: :string, description: "Profile picture"}
+        is_banned: %Schema{type: :boolean, description: "Is banned"}
       },
-      required: [:id, :first_name, :last_name, :email, :telegram, :role, :pfp]
+      required: [:id, :created_at, :login, :is_banned]
     })
   end
 
@@ -44,20 +42,10 @@ defmodule Ice.Schemas do
       description: "Request to signup a user",
       type: :object,
       properties: %{
-        first_name: %Schema{type: :string, description: "First name"},
-        last_name: %Schema{type: :string, description: "Last name"},
-        email: %Schema{type: :string, description: "Email"},
-        telegram: %Schema{type: :string, description: "Telegram"},
-        password: %Schema{type: :string, description: "Password"},
-        pfp: %Schema{type: :string, description: "Profile picture"},
-        role: %Schema{
-          type: :string,
-          enum: ["mentor", "normie"],
-          description: "User role",
-          default: "normie"
-        }
+        login: %Schema{type: :string, description: "Login (phone or email)"},
+        password: %Schema{type: :string, description: "Password"}
       },
-      required: [:first_name, :last_name, :email, :telegram, :password, :pfp]
+      required: [:login, :password]
     })
   end
 
@@ -69,10 +57,10 @@ defmodule Ice.Schemas do
       description: "Request to signin a user",
       type: :object,
       properties: %{
-        email: %Schema{type: :string, description: "Email"},
+        login: %Schema{type: :string, description: "Login (phone or email)"},
         pwd: %Schema{type: :string, description: "Password"}
       },
-      required: [:email, :pwd]
+      required: [:login, :pwd]
     })
   end
 
@@ -84,17 +72,8 @@ defmodule Ice.Schemas do
       description: "Request to update a user",
       type: :object,
       properties: %{
-        first_name: %Schema{type: :string, description: "First name"},
-        last_name: %Schema{type: :string, description: "Last name"},
-        email: %Schema{type: :string, description: "Email"},
-        telegram: %Schema{type: :string, description: "Telegram"},
-        password: %Schema{type: :string, description: "Password"},
-        pfp: %Schema{type: :string, description: "Profile picture"},
-        role: %Schema{
-          type: :string,
-          enum: ["mentor", "normie"],
-          description: "User role"
-        }
+        login: %Schema{type: :string, description: "Login (phone or email)"},
+        password: %Schema{type: :string, description: "Password"}
       }
     })
   end

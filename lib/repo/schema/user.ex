@@ -22,25 +22,28 @@ defmodule Repo.User do
       change fn changeset, _ ->
         pwd = Ash.Changeset.get_attribute(changeset, :password)
 
-        if pwd do
-          Ash.Changeset.change_attribute(changeset, :password, encode_pwd(pwd))
-        else
-          changeset
-        end
+        changeset =
+          if pwd do
+            Ash.Changeset.change_attribute(changeset, :password, encode_pwd(pwd))
+          else
+            changeset
+          end
+
+        Ash.Changeset.change_attribute(changeset, :last_active_at, DateTime.utc_now())
       end
     end
 
     action :signin do
       returns :term
-      argument :email, :string, allow_nil?: false
+      argument :login, :string, allow_nil?: false
       argument :pwd, :string, allow_nil?: false
 
       run fn changeset, _ ->
-        email = Ash.Changeset.get_argument(changeset, :email)
+        login = Ash.Changeset.get_argument(changeset, :login)
         pwd = Ash.Changeset.get_argument(changeset, :pwd)
 
         case Repo.User
-             |> Ash.Query.filter(email: email)
+             |> Ash.Query.filter(login: login)
              |> Ash.read() do
           {:ok, [user]} ->
             if verify_pwd(pwd, user.password) do
@@ -58,28 +61,15 @@ defmodule Repo.User do
       end
     end
 
-    default_accept [:first_name, :last_name, :email, :telegram, :role, :password, :pfp]
+    default_accept [:login, :password]
   end
 
   attributes do
     uuid_primary_key :id
 
-    attribute :first_name, :string do
-      allow_nil? false
-      public? true
-    end
+    create_timestamp :created_at
 
-    attribute :last_name, :string do
-      allow_nil? false
-      public? true
-    end
-
-    attribute :email, :string do
-      allow_nil? false
-      public? true
-    end
-
-    attribute :telegram, :string do
+    attribute :login, :string do
       allow_nil? false
       public? true
     end
@@ -89,19 +79,18 @@ defmodule Repo.User do
       public? false
     end
 
-    attribute :pfp, :string do
-      allow_nil? false
+    attribute :last_active_at, :utc_datetime do
+      allow_nil? true
       public? true
     end
 
-    attribute :role, :atom do
-      default :normie
+    attribute :is_banned, :boolean do
+      default false
       public? true
-      constraints one_of: [:mentor, :normie]
     end
   end
 
   identities do
-    identity :unique_email, [:email]
+    identity :unique_login, [:login]
   end
 end
