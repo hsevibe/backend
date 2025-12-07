@@ -112,6 +112,13 @@ defmodule Repo.Profile do
     end
   end
 
+  relationships do
+    belongs_to :user, Repo.User do
+      attribute_type :uuid
+      attribute_public? true
+    end
+  end
+
   identities do
     identity :unique_user_id, [:user_id]
   end
