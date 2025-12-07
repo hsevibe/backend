@@ -270,6 +270,72 @@ defmodule Ice.Schemas do
     })
   end
 
+  defmodule Training do
+    require OpenApiSpex
+
+    OpenApiSpex.schema(%{
+      title: "Training",
+      description: "A training",
+      type: :object,
+      properties: %{
+        id: %Schema{type: :string, description: "Training ID"},
+        created_at: %Schema{type: :string, format: :"date-time", description: "Created at"},
+        title: %Schema{type: :string, description: "Training title"},
+        info: %Schema{type: :string, description: "Training info"},
+        level: %Schema{type: :string, description: "Training level"},
+        count: %Schema{type: :integer, description: "Training count"},
+        type: %Schema{type: :string, description: "Training type"}
+      },
+      required: [:id, :created_at, :title, :info, :level, :count, :type]
+    })
+  end
+
+  defmodule TrainingList do
+    require OpenApiSpex
+
+    OpenApiSpex.schema(%{
+      title: "TrainingList",
+      description: "List of trainings",
+      type: :array,
+      items: Training
+    })
+  end
+
+  defmodule CreateTrainingRequest do
+    require OpenApiSpex
+
+    OpenApiSpex.schema(%{
+      title: "CreateTrainingRequest",
+      description: "Request to create a training",
+      type: :object,
+      properties: %{
+        title: %Schema{type: :string, description: "Training title"},
+        info: %Schema{type: :string, description: "Training info"},
+        level: %Schema{type: :string, description: "Training level"},
+        count: %Schema{type: :integer, description: "Training count"},
+        type: %Schema{type: :string, description: "Training type"}
+      },
+      required: [:title, :info, :level, :count, :type]
+    })
+  end
+
+  defmodule UpdateTrainingRequest do
+    require OpenApiSpex
+
+    OpenApiSpex.schema(%{
+      title: "UpdateTrainingRequest",
+      description: "Request to update a training",
+      type: :object,
+      properties: %{
+        title: %Schema{type: :string, description: "Training title"},
+        info: %Schema{type: :string, description: "Training info"},
+        level: %Schema{type: :string, description: "Training level"},
+        count: %Schema{type: :integer, description: "Training count"},
+        type: %Schema{type: :string, description: "Training type"}
+      }
+    })
+  end
+
   defmodule ErrorResponse do
     require OpenApiSpex
 

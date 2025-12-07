@@ -6,11 +6,13 @@ defmodule Repo.Domain do
     resource Repo.User
     resource Repo.Profile
     resource Repo.Event
+    resource Repo.Training
   end
 
   @user Repo.User
   @profile Repo.Profile
   @event Repo.Event
+  @training Repo.Training
 
   def list_users do
     case Ash.read(@user) do
@@ -210,6 +212,67 @@ defmodule Repo.Domain do
 
       {:error, %Ash.Error.Query.NotFound{}} ->
         {:error, :event_not_found}
+
+      {:error, _} ->
+        {:error, :internal_error}
+    end
+  end
+
+  def list_trainings do
+    case Ash.read(@training) do
+      {:ok, trainings} -> {:ok, trainings}
+      {:error, _} -> {:error, :internal_error}
+    end
+  end
+
+  def get_training(training_id) do
+    case @training |> Ash.Query.filter(id: training_id) |> Ash.read() do
+      {:ok, [training]} -> {:ok, training}
+      {:ok, []} -> {:error, :training_not_found}
+      {:error, _} -> {:error, :internal_error}
+    end
+  end
+
+  def create_training(attrs) do
+    case @training |> Ash.Changeset.for_create(:create, attrs) |> Ash.create() do
+      {:ok, training} ->
+        {:ok, training}
+
+      {:error, %Ash.Error.Invalid{}} ->
+        {:error, :validation_error}
+
+      {:error, _} ->
+        {:error, :internal_error}
+    end
+  end
+
+  def update_training(training_id, attrs) do
+    case @training |> Ash.get(training_id) do
+      {:ok, training} ->
+        case training |> Ash.Changeset.for_update(:update, attrs) |> Ash.update() do
+          {:ok, training} -> {:ok, training}
+          {:error, %Ash.Error.Invalid{}} -> {:error, :validation_error}
+          {:error, _} -> {:error, :internal_error}
+        end
+
+      {:error, %Ash.Error.Query.NotFound{}} ->
+        {:error, :training_not_found}
+
+      {:error, _} ->
+        {:error, :internal_error}
+    end
+  end
+
+  def delete_training(training_id) do
+    case @training |> Ash.get(training_id) do
+      {:ok, training} ->
+        case training |> Ash.destroy() do
+          :ok -> :ok
+          {:error, _} -> {:error, :internal_error}
+        end
+
+      {:error, %Ash.Error.Query.NotFound{}} ->
+        {:error, :training_not_found}
 
       {:error, _} ->
         {:error, :internal_error}

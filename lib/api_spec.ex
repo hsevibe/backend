@@ -15,6 +15,10 @@ defmodule Ice.ApiSpec do
     EventList,
     CreateEventRequest,
     UpdateEventRequest,
+    Training,
+    TrainingList,
+    CreateTrainingRequest,
+    UpdateTrainingRequest,
     ErrorResponse
   }
 
@@ -298,6 +302,82 @@ defmodule Ice.ApiSpec do
               200 => Operation.response("Event List", "application/json", EventList),
               500 =>
                 Operation.response("Internal Server Error", "application/json", ErrorResponse)
+            }
+          }
+        },
+        "/trainings" => %PathItem{
+          get: %Operation{
+            tags: ["trainings"],
+            summary: "List trainings",
+            description: "List all trainings",
+            operationId: "TrainingController.index",
+            responses: %{
+              200 => Operation.response("Training List", "application/json", TrainingList)
+            }
+          },
+          post: %Operation{
+            tags: ["trainings"],
+            summary: "Create training",
+            description: "Create a new training",
+            operationId: "TrainingController.create",
+            requestBody:
+              Operation.request_body(
+                "Training attributes",
+                "application/json",
+                CreateTrainingRequest,
+                required: true
+              ),
+            responses: %{
+              201 => Operation.response("Training", "application/json", Training),
+              400 => Operation.response("Bad Request", "application/json", ErrorResponse)
+            }
+          }
+        },
+        "/trainings/{training_id}" => %PathItem{
+          get: %Operation{
+            tags: ["trainings"],
+            summary: "Get training",
+            description: "Get a training by ID",
+            operationId: "TrainingController.show",
+            parameters: [
+              Operation.parameter(:training_id, :path, :string, "Training ID", required: true)
+            ],
+            responses: %{
+              200 => Operation.response("Training", "application/json", Training),
+              404 => Operation.response("Not Found", "application/json", ErrorResponse)
+            }
+          },
+          put: %Operation{
+            tags: ["trainings"],
+            summary: "Update training",
+            description: "Update an existing training",
+            operationId: "TrainingController.update",
+            parameters: [
+              Operation.parameter(:training_id, :path, :string, "Training ID", required: true)
+            ],
+            requestBody:
+              Operation.request_body(
+                "Training attributes",
+                "application/json",
+                UpdateTrainingRequest,
+                required: true
+              ),
+            responses: %{
+              200 => Operation.response("Training", "application/json", Training),
+              404 => Operation.response("Not Found", "application/json", ErrorResponse)
+            }
+          },
+          delete: %Operation{
+            tags: ["trainings"],
+            summary: "Delete training",
+            description: "Delete a training by ID",
+            operationId: "TrainingController.delete",
+            parameters: [
+              Operation.parameter(:training_id, :path, :string, "Training ID", required: true)
+            ],
+            responses: %{
+              204 => Operation.response("No Content", "application/json", nil),
+              404 => Operation.response("Not Found", "application/json", ErrorResponse)
             }
           }
         }
