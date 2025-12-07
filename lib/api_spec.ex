@@ -15,9 +15,6 @@ defmodule Ice.ApiSpec do
   @impl OpenApiSpex.OpenApi
   def spec do
     %OpenApi{
-      servers: [
-        %Server{url: "http://localhost:80"}
-      ],
       info: %Info{
         title: "Ice API",
         version: "1.0.0",
