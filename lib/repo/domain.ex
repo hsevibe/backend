@@ -5,10 +5,12 @@ defmodule Repo.Domain do
   resources do
     resource Repo.User
     resource Repo.Profile
+    resource Repo.Event
   end
 
   @user Repo.User
   @profile Repo.Profile
+  @event Repo.Event
 
   def list_users do
     case Ash.read(@user) do
@@ -143,6 +145,74 @@ defmodule Repo.Domain do
 
       {:error, _} ->
         {:error, :profile_not_found}
+    end
+  end
+
+  def list_events do
+    case Ash.read(@event) do
+      {:ok, events} -> {:ok, events}
+      {:error, _} -> {:error, :internal_error}
+    end
+  end
+
+  def get_event(event_id) do
+    case @event |> Ash.Query.filter(id: event_id) |> Ash.read() do
+      {:ok, [event]} -> {:ok, event}
+      {:ok, []} -> {:error, :event_not_found}
+      {:error, _} -> {:error, :internal_error}
+    end
+  end
+
+  def create_event(attrs) do
+    case @event |> Ash.Changeset.for_create(:create, attrs) |> Ash.create() do
+      {:ok, event} ->
+        {:ok, event}
+
+      {:error, %Ash.Error.Invalid{}} ->
+        {:error, :validation_error}
+
+      {:error, _} ->
+        {:error, :internal_error}
+    end
+  end
+
+  def update_event(event_id, attrs) do
+    case @event |> Ash.get(event_id) do
+      {:ok, event} ->
+        case event |> Ash.Changeset.for_update(:update, attrs) |> Ash.update() do
+          {:ok, event} -> {:ok, event}
+          {:error, %Ash.Error.Invalid{}} -> {:error, :validation_error}
+          {:error, _} -> {:error, :internal_error}
+        end
+
+      {:error, %Ash.Error.Query.NotFound{}} ->
+        {:error, :event_not_found}
+
+      {:error, _} ->
+        {:error, :internal_error}
+    end
+  end
+
+  def get_events_by_user_id(user_id) do
+    case @event |> Ash.Query.filter(user_id: user_id) |> Ash.read() do
+      {:ok, events} -> {:ok, events}
+      {:error, _} -> {:error, :internal_error}
+    end
+  end
+
+  def delete_event(event_id) do
+    case @event |> Ash.get(event_id) do
+      {:ok, event} ->
+        case event |> Ash.destroy() do
+          :ok -> :ok
+          {:error, _} -> {:error, :internal_error}
+        end
+
+      {:error, %Ash.Error.Query.NotFound{}} ->
+        {:error, :event_not_found}
+
+      {:error, _} ->
+        {:error, :internal_error}
     end
   end
 end

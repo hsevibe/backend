@@ -15,6 +15,7 @@ defmodule Ice.Router do
 
   forward("/users", to: Repo.User.Router)
   forward("/profiles", to: Repo.Profile.Router)
+  forward("/events", to: Repo.Event.Router)
 
   get "/ping" do
     send_resp(conn, 200, "pong")

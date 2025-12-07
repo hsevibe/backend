@@ -198,6 +198,78 @@ defmodule Ice.Schemas do
     })
   end
 
+  defmodule Event do
+    require OpenApiSpex
+
+    OpenApiSpex.schema(%{
+      title: "Event",
+      description: "An event",
+      type: :object,
+      properties: %{
+        id: %Schema{type: :string, description: "Event ID"},
+        created_at: %Schema{type: :string, format: :"date-time", description: "Created at"},
+        user_id: %Schema{type: :string, description: "User ID"},
+        date: %Schema{type: :string, format: :"date-time", description: "Event date"},
+        lat: %Schema{type: :number, format: :float, description: "Latitude"},
+        lon: %Schema{type: :number, format: :float, description: "Longitude"},
+        title: %Schema{type: :string, description: "Event title"},
+        level: %Schema{type: :string, description: "Event level"},
+        info: %Schema{type: :string, description: "Event info"}
+      },
+      required: [:id, :created_at, :user_id, :date, :lat, :lon, :title, :level, :info]
+    })
+  end
+
+  defmodule EventList do
+    require OpenApiSpex
+
+    OpenApiSpex.schema(%{
+      title: "EventList",
+      description: "List of events",
+      type: :array,
+      items: Event
+    })
+  end
+
+  defmodule CreateEventRequest do
+    require OpenApiSpex
+
+    OpenApiSpex.schema(%{
+      title: "CreateEventRequest",
+      description: "Request to create an event",
+      type: :object,
+      properties: %{
+        user_id: %Schema{type: :string, description: "User ID"},
+        date: %Schema{type: :string, format: :"date-time", description: "Event date"},
+        lat: %Schema{type: :number, format: :float, description: "Latitude"},
+        lon: %Schema{type: :number, format: :float, description: "Longitude"},
+        title: %Schema{type: :string, description: "Event title"},
+        level: %Schema{type: :string, description: "Event level"},
+        info: %Schema{type: :string, description: "Event info"}
+      },
+      required: [:user_id, :date, :lat, :lon, :title, :level, :info]
+    })
+  end
+
+  defmodule UpdateEventRequest do
+    require OpenApiSpex
+
+    OpenApiSpex.schema(%{
+      title: "UpdateEventRequest",
+      description: "Request to update an event",
+      type: :object,
+      properties: %{
+        user_id: %Schema{type: :string, description: "User ID"},
+        date: %Schema{type: :string, format: :"date-time", description: "Event date"},
+        lat: %Schema{type: :number, format: :float, description: "Latitude"},
+        lon: %Schema{type: :number, format: :float, description: "Longitude"},
+        title: %Schema{type: :string, description: "Event title"},
+        level: %Schema{type: :string, description: "Event level"},
+        info: %Schema{type: :string, description: "Event info"}
+      }
+    })
+  end
+
   defmodule ErrorResponse do
     require OpenApiSpex
 

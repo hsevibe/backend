@@ -11,6 +11,10 @@ defmodule Ice.ApiSpec do
     ProfileList,
     CreateProfileRequest,
     UpdateProfileRequest,
+    Event,
+    EventList,
+    CreateEventRequest,
+    UpdateEventRequest,
     ErrorResponse
   }
 
@@ -202,6 +206,98 @@ defmodule Ice.ApiSpec do
             responses: %{
               200 => Operation.response("Profile", "application/json", Profile),
               404 => Operation.response("Not Found", "application/json", ErrorResponse)
+            }
+          }
+        },
+        "/events" => %PathItem{
+          get: %Operation{
+            tags: ["events"],
+            summary: "List events",
+            description: "List all events",
+            operationId: "EventController.index",
+            responses: %{
+              200 => Operation.response("Event List", "application/json", EventList)
+            }
+          },
+          post: %Operation{
+            tags: ["events"],
+            summary: "Create event",
+            description: "Create a new event",
+            operationId: "EventController.create",
+            requestBody:
+              Operation.request_body(
+                "Event attributes",
+                "application/json",
+                CreateEventRequest,
+                required: true
+              ),
+            responses: %{
+              201 => Operation.response("Event", "application/json", Event),
+              400 => Operation.response("Bad Request", "application/json", ErrorResponse)
+            }
+          }
+        },
+        "/events/{event_id}" => %PathItem{
+          get: %Operation{
+            tags: ["events"],
+            summary: "Get event",
+            description: "Get an event by ID",
+            operationId: "EventController.show",
+            parameters: [
+              Operation.parameter(:event_id, :path, :string, "Event ID", required: true)
+            ],
+            responses: %{
+              200 => Operation.response("Event", "application/json", Event),
+              404 => Operation.response("Not Found", "application/json", ErrorResponse)
+            }
+          },
+          put: %Operation{
+            tags: ["events"],
+            summary: "Update event",
+            description: "Update an existing event",
+            operationId: "EventController.update",
+            parameters: [
+              Operation.parameter(:event_id, :path, :string, "Event ID", required: true)
+            ],
+            requestBody:
+              Operation.request_body(
+                "Event attributes",
+                "application/json",
+                UpdateEventRequest,
+                required: true
+              ),
+            responses: %{
+              200 => Operation.response("Event", "application/json", Event),
+              404 => Operation.response("Not Found", "application/json", ErrorResponse)
+            }
+          },
+          delete: %Operation{
+            tags: ["events"],
+            summary: "Delete event",
+            description: "Delete an event by ID",
+            operationId: "EventController.delete",
+            parameters: [
+              Operation.parameter(:event_id, :path, :string, "Event ID", required: true)
+            ],
+            responses: %{
+              204 => Operation.response("No Content", "application/json", nil),
+              404 => Operation.response("Not Found", "application/json", ErrorResponse)
+            }
+          }
+        },
+        "/events/by-user/{user_id}" => %PathItem{
+          get: %Operation{
+            tags: ["events"],
+            summary: "Get events by user ID",
+            description: "Get all events for a specific user",
+            operationId: "EventController.show_by_user",
+            parameters: [
+              Operation.parameter(:user_id, :path, :string, "User ID", required: true)
+            ],
+            responses: %{
+              200 => Operation.response("Event List", "application/json", EventList),
+              500 =>
+                Operation.response("Internal Server Error", "application/json", ErrorResponse)
             }
           }
         }
